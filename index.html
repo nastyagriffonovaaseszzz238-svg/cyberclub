@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Компьютерный клуб</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('fon3.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-color: #00001e;
+            color: #00001e;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ===== Шапка ===== */
+        header {
+            background-color: #00001e;
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        .logo span {
+            color: #F7E8AC;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        nav a:hover {
+            color: #F7E8AC;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 0.2rem 0.4rem;
+            transition: color 0.3s;
+            font-family: inherit;
+            display: inline-block;
+        }
+        .nav-btn:hover {
+            color: #F7E8AC;
+        }
+/*кнопка забронировать ====*/
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-image: url('knopka_sdel_bron_bezh2.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            width: 250px;
+            height: 62px;
+            padding: 0;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1rem;
+            color: #00001E;
+            transition: transform 0.3s;
+            text-align: center;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-text {
+            display: inline-block;
+            transform: translateY(-4px);
+        }
+/*ниже это боковое меню т е сайдбар*/
+        #sidebar-toggle {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+            pointer-events: none;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            cursor: default;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 300px;
+            height: 100%;
+            background: #00001e;
+            border-right: 2px solid #F7E8AC;
+            z-index: 1000;
+            padding: 2rem 1.5rem;
+            transition: left 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.6);
+            overflow-y: auto;
+        }
+
+        #sidebar-toggle:checked ~ .sidebar-overlay {
+            opacity: 1;
+            visibility: visible;
+        }
+        #sidebar-toggle:checked ~ .sidebar {
+            left: 0;
+        }
+
+        .sidebar-close {
+            display: inline-block;
+            background: none;
+            border: none;
+            color: #F7E8AC;
+            font-size: 2rem;
+            cursor: pointer;
+            float: right;
+            line-height: 1;
+            transition: transform 0.3s;
+            padding: 0 0.2rem;
+        }
+        .sidebar-close:hover {
+            transform: rotate(90deg);
+        }
+
+        .sidebar h2 {
+            color: #F7E8AC;
+            font-size: 1.6rem;
+            margin: 1.5rem 0 1rem 0;
+            border-bottom: 2px solid #F7E8AC;
+            padding-bottom: 0.5rem;
+        }
+        .sidebar-menu {
+            list-style: none;
+            margin-top: 1rem;
+        }
+        .sidebar-menu li {
+            margin: 0.8rem 0;
+        }
+        .sidebar-menu a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.1rem;
+            display: block;
+            padding: 0.5rem 0.8rem;
+            border-radius: 6px;
+            transition: background 0.2s, color 0.2s;
+        }
+        .sidebar-menu a:hover {
+            background: #F7E8AC;
+            color: #00001e;
+        }
+
+        /* ===== Баннер с изображением на фоне. типо заголовок ===== */
+        .page-header {
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+            background-image: url('фин.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+        .page-header * {
+            position: relative;
+            z-index: 2;
+        }
+        .page-header h1 {
+            font-size: 2.5rem;
+            color: #FFC691;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+        }
+        .page-header p {
+            font-size: 1.2rem;
+            color: #fff;
+            max-width: 700px;
+            margin: 0.5rem auto 0;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+        }
+        .page-header .btn {
+            margin-top: 1rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin: 2rem 0 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid #ff6666;
+            display: inline-block;
+            color: #F3D78F;
+        }
+
+        /* ===== 3 карты с текстурой ===== */
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .article-card {
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .article-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-texture-1 {
+            background-image: url('цена1.png');
+        }
+        .card-texture-2 {
+            background-image: url('цена3.png');
+        }
+        .card-texture-3 {
+            background-image: url('цена4.png');
+        }
+
+        .card-content {
+            padding: 1.5rem;
+            border-radius: 0 0 10px 10px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .card-category {
+            color: #00001e;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        .card-title {
+            font-size: 1.3rem;
+            margin: 0.5rem 0;
+        }
+        .card-excerpt {
+            color: #006763;
+            margin-bottom: 1rem;
+        }
+        .card-content a {
+            color: #00001E;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: auto;
+        }
+        .card-content a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== нижняя штука с текстурой ===== */
+        .cta-banner {
+      
+            background-image: url('ramka_o_bare_i_chto-to_eschyo.png'); /* СЮДА ВАШ ФАЙЛ */
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            margin: 2rem 0;
+         
+            z-index: 1;
+       
+        }
+
+ 
+
+
+        .cta-banner * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-banner h3 {
+            font-size: 1.4rem;
+            color: #00001E; 
+        }
+        .cta-banner p {
+            margin: 1rem 0;
+            color: #00001E;
+        }
+        .cta-banner .btn {
+            
+        }
+/*подвал*/
+        footer {
+            background-color: #00001e;
+            color: #CCC;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .header-flex {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 0.8rem;
+            }
+            .sidebar {
+                width: 280px;
+                left: -300px;
+            }
+            .page-header h1 {
+                font-size: 1.8rem;
+            }
+            .page-header {
+                min-height: 200px;
+                padding: 2rem 0;
+            }
+            .articles-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar {
+                width: 260px;
+                left: -280px;
+            }
+            .articles-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <input type="checkbox" id="sidebar-toggle" />
+    <label for="sidebar-toggle" class="sidebar-overlay"></label>
+
+    <aside class="sidebar">
+        <label for="sidebar-toggle" class="sidebar-close" aria-label="Закрыть меню">✕</label>
+        <h2>Меню</h2>
+        <ul class="sidebar-menu">
+            <li><a href="Бар.html">Бар</a></li>
+            <li><a href="События2.html">События</a></li>
+            <li><a href="Вопрос-ответ.html">Вопрос-ответ</a></li>
+            <li><a href="Сотрудники2.html">Наши сотрудники</a></li>
+            <li><a href="Техбез.html">Правила посещения</a></li>
+            <li><a href="Отзывы.html">Отзывы</a></li>
+        </ul>
+    </aside>
+
+    <header>
+        <div class="container header-flex">
+            <div class="logo"><a href="index.html"><img src="logo.png" width="168" height="84" alt=""/></a></div>
+            <nav>
+                <ul>
+                    <li><label for="sidebar-toggle" class="nav-btn">Подробнее ></label></li>
+                    <li><a href="Клубы.html">Клубы</a></li>
+                    <li><a href="Цены.html">Цены</a></li>
+                    <li><a href="акции.html">Акции</a></li>
+                    <li><a href="Игры.html">Игры</a></li>
+                    <li><a href="Контакты2.html">Контакты</a></li>
+                </ul>
+            </nav>
+            <div>
+                <a href="Бронь.html" class="btn"><span class="btn-text">Забронировать</span></a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Баннер с изображением клуба -->
+        <section class="page-header">
+            <div class="container">
+                <h1>&nbsp;</h1>
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+                <h1>Наш компьютерный клуб</h1>
+                <p>&nbsp; </p>
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+            </div>
+        </section>
+'///*ниже 3 карты*/
+        <div class="container">
+            <h2 class="section-title">Что мы предлагаем</h2>
+            <div class="articles-grid">
+
+                <div class="article-card card-texture-1">
+                    <div class="card-content">
+                        <h3 class="card-title">&nbsp;</h3>
+                        <h3 class="card-title">Новейшее оборудование</h3>
+                        <div class="card-excerpt"><img src="f1.png" width="288" height="187" alt=""/></div>
+                        <a href="Клубы.html">О наших клубах &gt;</a>
+                    </div>
+                </div>
+
+                <div class="article-card card-texture-2">
+                    <div class="card-content">
+                        <h3 class="card-title">&nbsp;</h3>
+                        <h3 class="card-title">Работаем 24 часа</h3>
+                        <div class="card-excerpt"><img src="f2.jpg" width="288" height="190" alt=""/></div>
+                        <a href="Техбез.html">О правилах посещения &gt;</a>
+                    </div>
+                </div>
+
+                <div class="article-card card-texture-3">
+                    <div class="card-content">
+                        <h3 class="card-title">&nbsp;</h3>
+                        <h3 class="card-title">Устраиваем ивенты</h3>
+                        <div class="card-excerpt"><img src="f3.png" width="287" height="189" alt=""/></div>
+                        <a href="События2.html">О событиях &gt;</a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Нижняя плашка с текстурой -->
+            <div class="cta-banner">
+                <h3>&nbsp;</h3>
+                <h3>Оформите бронь по удобному прайсу в два клика!</h3>
+                <p style="margin: 1rem 0;">Мы Вас ждём!</p>
+                <a href="Контакты2.html" class="btn">Связаться с нами</a>
+            </div>
+        </div>
+    </main>
+/*подвал*/
+    <footer>
+        <div class="container">
+            <p>© 2026 Компьютерный клуб. Все права защищены.</p>
+            <p>г. Воронеж</p>
+        </div>
+    </footer>
+
+</body>
+</html>

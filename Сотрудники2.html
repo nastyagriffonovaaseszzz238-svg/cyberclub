@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Наши сотрудники — Компьютерный клуб</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-image: url('fon3.png'); 
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-color: #00001e; 
+    color: #00001e;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ===== Шапка ===== */
+        header {
+            background-color: #00001e;
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        .logo span {
+            color: #F7E8AC;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        nav a:hover {
+            color: #F7E8AC;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 0.2rem 0.4rem;
+            transition: color 0.3s;
+            font-family: inherit;
+            display: inline-block;
+        }
+        .nav-btn:hover {
+            color: #F7E8AC;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-image: url('knopka_sdel_bron_bezh2.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            width: 250px;
+            height: 62px;
+            padding: 0;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1rem;
+            color: #00001E;
+            transition: transform 0.3s;
+            text-align: center;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-text {
+            display: inline-block;
+            transform: translateY(-4px);
+        }
+
+        #sidebar-toggle {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+            pointer-events: none;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            cursor: default;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 300px;
+            height: 100%;
+            background: #00001e;
+            border-right: 2px solid #F7E8AC;
+            z-index: 1000;
+            padding: 2rem 1.5rem;
+            transition: left 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.6);
+            overflow-y: auto;
+        }
+
+        #sidebar-toggle:checked ~ .sidebar-overlay {
+            opacity: 1;
+            visibility: visible;
+        }
+        #sidebar-toggle:checked ~ .sidebar {
+            left: 0;
+        }
+
+        .sidebar-close {
+            display: inline-block;
+            background: none;
+            border: none;
+            color: #F7E8AC;
+            font-size: 2rem;
+            cursor: pointer;
+            float: right;
+            line-height: 1;
+            transition: transform 0.3s;
+            padding: 0 0.2rem;
+        }
+        .sidebar-close:hover {
+            transform: rotate(90deg);
+        }
+
+        .sidebar h2 {
+            color: #F7E8AC;
+            font-size: 1.6rem;
+            margin: 1.5rem 0 1rem 0;
+            border-bottom: 2px solid #F7E8AC;
+            padding-bottom: 0.5rem;
+        }
+        .sidebar-menu {
+            list-style: none;
+            margin-top: 1rem;
+        }
+        .sidebar-menu li {
+            margin: 0.8rem 0;
+        }
+        .sidebar-menu a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.1rem;
+            display: block;
+            padding: 0.5rem 0.8rem;
+            border-radius: 6px;
+            transition: background 0.2s, color 0.2s;
+        }
+        .sidebar-menu a:hover {
+            background: #F7E8AC;
+            color: #00001e;
+        }
+
+        .page-header {
+  
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+           
+            margin-bottom: 2rem;
+        }
+        .page-header h1 {
+    font-size: 2.5rem;
+    color: #FFC691;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .page-header p {
+            font-size: 1.2rem;
+            color: #ccc;
+            max-width: 700px;
+            margin: 0.5rem auto 0;
+        }
+
+               .staff-list {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin: 2rem 0 3rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .staff-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+            
+            background-size: contain;
+            background-position: center;
+			background-repeat: no-repeat; 
+			height: 300px;
+          
+        }
+        .staff-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        /* текстуры для каждого сотрудника */
+        .staff-1 {
+            background-image: url('ramka_rabotniki_1.png'); 
+        }
+        .staff-2 {
+            background-image: url('ramka_rabotniki_2.png'); 
+        }
+        .staff-3 {
+            background-image: url('ramka_rabotniki_3.png'); 
+        }
+        .staff-4 {
+            background-image: url('ramka_rabotniki_4.png'); 
+        }
+
+        .staff-card .avatar {
+	
+    width: 190px;
+    height: 170px;
+    
+        display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #F7E8AC;
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 1rem;
+    overflow: hidden;
+			margin-bottom: 1rem;}
+
+        .staff-card .avatar img {
+            width: 120%;
+            height: 110%;
+            object-fit: cover;
+        }
+
+        .staff-card .info h3 {
+            color: #00001e;
+            font-size: 1.4rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .staff-card .info .position {
+    color: #383838;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.4rem;
+        }
+
+        .staff-card .info p {
+    color: #242424;
+    font-size: 0.95rem;
+    line-height: 1.4;
+        }
+
+        footer {
+            background-color: #00001e;
+            color: #CCC;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 4rem;
+            
+        }
+
+        @media (max-width: 768px) {
+            .header-flex {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 0.8rem;
+            }
+            .sidebar {
+                width: 280px;
+                left: -300px;
+            }
+            .page-header h1 {
+                font-size: 1.8rem;
+            }
+ .staff-card .avatar {
+                width: 200px;
+                height: 180px;
+	 
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar {
+                width: 260px;
+                left: -280px;
+             .staff-card .avatar {
+                width: 160px;
+                height: 140px;
+            }
+        }
+		
+		
+    </style>
+</head>
+<body>
+
+	
+<input type="checkbox" id="sidebar-toggle" />
+    <label for="sidebar-toggle" class="sidebar-overlay"></label>
+
+    <aside class="sidebar">
+        <label for="sidebar-toggle" class="sidebar-close" aria-label="Закрыть меню">✕</label>
+        <h2>Меню</h2>
+        <ul class="sidebar-menu">
+            <li><a href="Бар.html">Бар</a></li>
+            <li><a href="События2.html">События</a></li>
+            <li><a href="Вопрос-ответ.html">Вопрос-ответ</a></li>
+            <li><a href="Сотрудники2.html">Наши сотрудники</a></li>
+            <li><a href="Техбез.html">Правила посещения</a></li>
+            <li><a href="Отзывы.html">Отзывы</a></li>
+        </ul>
+    </aside>
+
+<header>
+        <div class="container header-flex">
+            <div class="logo"><a href="index.html">	 <img src="logo.png" width="168" height="84" alt=""/></a></div>
+            <nav>
+                <ul>
+                    <li><label for="sidebar-toggle" class="nav-btn">Подробнее ></label></li>
+                    <li><a href="Клубы.html">Клубы</a></li>
+                    <li><a href="Цены.html">Цены</a></li>
+                    <li><a href="акции.html">Акции</a></li>
+                    <li><a href="Игры.html">Игры</a></li>
+                    <li><a href="Контакты2.html">Контакты</a></li>
+                </ul>
+            </nav>
+            <div>
+                <a href="Бронь.html" class="btn" ><span class="btn-text">Забронировать</span></a>
+            </div>
+        </div>
+    </header>
+
+<main>
+        <section class="page-header">
+            <div class="container">
+                <h1>Наши сотрудники</h1>
+                <p>Профессионалы, которые создают атмосферу и помогают вам</p>
+            </div>
+        </section>
+
+        <div class="container">
+            <div class="staff-list">
+
+                <!-- Карточка сотрудника 1 -->
+                <div class="staff-card staff-1">
+                  <div class="avatar">
+        <img src="раб1.png" alt="Ульяна Гук" />
+    </div>
+                  <div class="info">
+                        <h3>Гук Ульяна</h3>
+                        <div class="position">Основатель клуба                    </div>
+                    </div>
+                </div>
+
+                <!-- Карточка сотрудника 2 -->
+                <div class="staff-card staff-2">
+                    <div class="avatar">
+                        <img src="раб2.png" alt="Анастасия Кулиничева" />
+                    </div>
+                    <div class="info">
+                        <h3>Кулиничева Анастасия</h3>
+                        <div class="position">
+                          <p>Менеджер Центрального филиала</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Карточка сотрудника 3 -->
+                <div class="staff-card staff-3">
+                    <div class="avatar">
+                       <img src="раб3.png" alt="Космачева Дарина" />
+                    </div>
+                    <div class="info">
+                        <h3>Космачева Дарина </h3>
+                        <div class="position">
+                          <p>Менеджер Северного филиала</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Карточка сотрудника 4 -->
+                <div class="staff-card staff-4">
+                    <div class="avatar">
+                       <img src="раб4.png" alt="Мещерякова Мария" />
+                    </div>
+                    <div class="info">
+                        <h3>Мещерякова Мария</h3>
+                        <div class="position">
+                          <p>Менеджер филиала «Восток»</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+<footer>
+        <div class="container">
+            <p>© 2026 Компьютерный клуб. Все права защищены.</p>
+            <p>г. Воронеж</p>
+        </div>
+    </footer>
+
+</body>
+</html>

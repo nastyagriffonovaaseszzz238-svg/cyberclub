@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Отзывы — Компьютерный клуб</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-image: url('fon3.png'); 
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-color: #00001e; 
+    color: #00001e;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ===== Шапка ===== */
+        header {
+            background-color: #00001e;
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        .logo span {
+            color: #F7E8AC;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        nav a:hover {
+            color: #F7E8AC;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 0.2rem 0.4rem;
+            transition: color 0.3s;
+            font-family: inherit;
+            display: inline-block;
+        }
+        .nav-btn:hover {
+            color: #F7E8AC;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-image: url('knopka_sdel_bron_bezh2.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            width: 250px;
+            height: 62px;
+            padding: 0;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1rem;
+            color: #00001E;
+            transition: transform 0.3s;
+            text-align: center;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-text {
+            display: inline-block;
+            transform: translateY(-4px);
+        }
+
+        #sidebar-toggle {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+            pointer-events: none;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            cursor: default;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 300px;
+            height: 100%;
+            background: #00001e;
+            border-right: 2px solid #F7E8AC;
+            z-index: 1000;
+            padding: 2rem 1.5rem;
+            transition: left 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.6);
+            overflow-y: auto;
+        }
+
+        #sidebar-toggle:checked ~ .sidebar-overlay {
+            opacity: 1;
+            visibility: visible;
+        }
+        #sidebar-toggle:checked ~ .sidebar {
+            left: 0;
+        }
+
+        .sidebar-close {
+            display: inline-block;
+            background: none;
+            border: none;
+            color: #F7E8AC;
+            font-size: 2rem;
+            cursor: pointer;
+            float: right;
+            line-height: 1;
+            transition: transform 0.3s;
+            padding: 0 0.2rem;
+        }
+        .sidebar-close:hover {
+            transform: rotate(90deg);
+        }
+
+        .sidebar h2 {
+            color: #F7E8AC;
+            font-size: 1.6rem;
+            margin: 1.5rem 0 1rem 0;
+            border-bottom: 2px solid #F7E8AC;
+            padding-bottom: 0.5rem;
+        }
+        .sidebar-menu {
+            list-style: none;
+            margin-top: 1rem;
+        }
+        .sidebar-menu li {
+            margin: 0.8rem 0;
+        }
+        .sidebar-menu a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.1rem;
+            display: block;
+            padding: 0.5rem 0.8rem;
+            border-radius: 6px;
+            transition: background 0.2s, color 0.2s;
+        }
+        .sidebar-menu a:hover {
+            background: #F7E8AC;
+            color: #00001e;
+        }
+
+        .page-header {
+  
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+           
+            margin-bottom: 2rem;
+        }
+        .page-header h1 {
+    font-size: 2.5rem;
+    color: #FFC691;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .page-header p {
+            font-size: 1.2rem;
+            color: #ccc;
+            max-width: 700px;
+            margin: 0.5rem auto 0;
+        }
+
+          .reviews-list {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin: 2rem 0 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .review-item {
+            border: 2px solid #F7E8AC;
+           
+            padding: 1.5rem;
+            background: transparent;
+            transition: border-color 0.3s, transform 0.3s;
+        }
+        .review-item:hover {
+            border-color: #fff;
+            transform: translateY(-3px);
+        }
+
+        .review-header {
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .review-author h3 {
+            color: #F7E8AC;
+            font-size: 1.1rem;
+            display: inline;
+        }
+        .review-author .review-date {
+            color: #aaa;
+            font-size: 0.85rem;
+            margin-left: 0.8rem;
+        }
+
+        .review-stars {
+            color: #ffb800;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .review-text {
+            color: #e0e0e0;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        .review-text strong {
+            color: #F7E8AC;
+        }
+
+        .bottom-block {
+            background: transparent;
+            border: 2px solid #F7E8AC;
+         
+            padding: 2rem;
+            margin: 1rem 0 3rem;
+            text-align: center;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .bottom-block h2 {
+            color: #F7E8AC;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        .bottom-block p {
+            color: #ccc;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+        .bottom-block .btn {
+            background-color: #F7E8AC;
+            color: #00001E;
+        }
+        .bottom-block .btn:hover {
+            background-color: #fff;
+        }
+
+        footer {
+            background-color: #00001e;
+            color: #CCC;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 4rem;
+            
+        }
+
+        @media (max-width: 768px) {
+            .header-flex {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 0.8rem;
+            }
+            .sidebar {
+                width: 280px;
+                left: -300px;
+            }
+            .page-header h1 {
+                font-size: 1.8rem;
+            }
+           .reviews-list {
+                padding: 0 10px;
+            }
+            .review-header {
+                flex-wrap: wrap;
+                gap: 0.3rem;
+            }
+            .review-author .review-date {
+                margin-left: 0;
+                display: block;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar {
+                width: 260px;
+                left: -280px;
+          
+            }
+        }
+		
+		
+    </style>
+</head>
+<body>
+
+	
+<input type="checkbox" id="sidebar-toggle" />
+    <label for="sidebar-toggle" class="sidebar-overlay"></label>
+
+    <aside class="sidebar">
+        <label for="sidebar-toggle" class="sidebar-close" aria-label="Закрыть меню">✕</label>
+        <h2>Меню</h2>
+        <ul class="sidebar-menu">
+            <li><a href="Бар.html">Бар</a></li>
+            <li><a href="События2.html">События</a></li>
+            <li><a href="Вопрос-ответ.html">Вопрос-ответ</a></li>
+            <li><a href="Сотрудники2.html">Наши сотрудники</a></li>
+            <li><a href="Техбез.html">Правила посещения</a></li>
+            <li><a href="Отзывы.html">Отзывы</a></li>
+        </ul>
+    </aside>
+
+<header>
+        <div class="container header-flex">
+            <div class="logo"><a href="index.html">	 <img src="logo.png" width="168" height="84" alt=""/></a></div>
+            <nav>
+                <ul>
+                    <li><label for="sidebar-toggle" class="nav-btn">Подробнее ></label></li>
+                    <li><a href="Клубы.html">Клубы</a></li>
+                    <li><a href="Цены.html">Цены</a></li>
+                    <li><a href="акции.html">Акции</a></li>
+                    <li><a href="Игры.html">Игры</a></li>
+                    <li><a href="Контакты2.html">Контакты</a></li>
+                </ul>
+            </nav>
+            <div>
+                <a href="Бронь.html" class="btn" ><span class="btn-text">Забронировать</span></a>
+            </div>
+        </div>
+    </header>
+
+<main>
+        <section class="page-header">
+            <div class="container">
+                <h1>Отзывы наших гостей</h1>
+                <p>Мы стараемся сделать наши клубы максимально камфорными для  каждого игрока. Ваши отзывы – лучшая награда!</p>
+</div>
+        </section>
+
+        <div class="container">
+            <div class="reviews-list">
+
+           
+                <div class="review-item">
+                    <div class="review-header">
+                        <div class="review-author">
+                            <h3>Анна Л.<span class="review-date">25.06.2026</span></h3>
+                        </div>
+                    </div>
+                    <div class="review-stars">★★★★★ </div>
+                    <div class="review-text">Отличное место для игры с друзьями. Компьютеры мощные, всё  работает без лагов, а персонал всегда помогает, если возникают вопросы.
+                    </div>
+                </div>
+
+              
+                <div class="review-item">
+                    <div class="review-header">
+                        <div class="review-author">
+                          <h3>Максим К.</h3>
+                          <h3><span class="review-date">20.06.2026</span></h3>
+                        </div>
+                    </div>
+                    <div class="review-stars">★★★★☆</div>
+                    <div class="review-text">
+                      <p>Пришёл попробовать клуб впервые и остался доволен. Удобные  кресла, приятная атмосфера и большой выбор игр.</p>
+                    </div>
+                </div>
+
+               
+                <div class="review-item">
+                    <div class="review-header">
+                        <div class="review-author">
+                          <h3>Илья Р.</h3> 
+                          <h3><span class="review-date">05.06.2026</span></h3>
+                        </div>
+                    </div>
+                    <div class="review-stars">★★★★★</div>
+                    <div class="review-text">Часто играем здесь командой перед  университетскими турнирами. Особенно нравится возможность заранее забронировать  отдельную комнату.</div>
+                </div>
+
+                
+                <div class="review-item">
+                    <div class="review-header">
+                        <div class="review-author">
+                            <h3>Дарья С.</h3>
+                            <h3><span class="review-date">23.05.2026</span></h3>
+                        </div>
+                    </div>
+                    <div class="review-stars">★★★★★</div>
+                    <div class="review-text">
+                      <p>Очень понравилась зона отдыха и бар. Можно спокойно  перекусить между матчами и не уходить далеко от компьютера.</p>
+                    </div>
+                </div>
+
+                
+                <div class="review-item">
+                    <div class="review-header">
+                        <div class="review-author">
+                            <h3>Артём В.</h3>
+                            <h3><span class="review-date">18.05.2026</span></h3>
+                        </div>
+                    </div>
+                    <div class="review-stars">★★★★☆</div>
+                    <div class="review-text">
+                      <p>Хорошее оборудование и быстрый интернет. Для вечерних  игровых сессий – отличный вариант.</p>
+                    </div>
+                </div>
+
+               
+                <div class="review-item">
+                    <div class="review-header">
+                        <div class="review-author">
+                            <h3>Екатерина Н.</h3>
+                            <h3><span class="review-date">11.05.2026</span></h3>
+                        </div>
+                    </div>
+                    <div class="review-stars">★★★★★</div>
+                    <div class="review-text">
+                      <p>Праздновали здесь день рождения младшего брата.  Администраторы помогли всё организовать, а гости остались в восторге от турнира  по любимой игре.</p>
+                    </div>
+                </div>
+
+            </div>
+
+       </div>
+    </main>
+
+<footer>
+        <div class="container">
+            <p>© 2026 Компьютерный клуб. Все права защищены.</p>
+            <p>г. Воронеж</p>
+        </div>
+    </footer>
+
+</body>
+</html>

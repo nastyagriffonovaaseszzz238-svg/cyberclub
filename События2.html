@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>События — Компьютерный клуб</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('fon3.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-color: #00001e;
+            color: #00001e;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ===== Шапка ===== */
+        header {
+            background-color: #00001e;
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        .logo span {
+            color: #F7E8AC;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        nav a:hover {
+            color: #F7E8AC;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 0.2rem 0.4rem;
+            transition: color 0.3s;
+            font-family: inherit;
+            display: inline-block;
+        }
+        .nav-btn:hover {
+            color: #F7E8AC;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-image: url('knopka_sdel_bron_bezh2.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            width: 250px;
+            height: 62px;
+            padding: 0;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1rem;
+            color: #00001E;
+            transition: transform 0.3s;
+            text-align: center;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-text {
+            display: inline-block;
+            transform: translateY(-4px);
+        }
+
+        #sidebar-toggle {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+            pointer-events: none;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            cursor: default;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 300px;
+            height: 100%;
+            background: #00001e;
+            border-right: 2px solid #F7E8AC;
+            z-index: 1000;
+            padding: 2rem 1.5rem;
+            transition: left 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.6);
+            overflow-y: auto;
+        }
+
+        #sidebar-toggle:checked ~ .sidebar-overlay {
+            opacity: 1;
+            visibility: visible;
+        }
+        #sidebar-toggle:checked ~ .sidebar {
+            left: 0;
+        }
+
+        .sidebar-close {
+            display: inline-block;
+            background: none;
+            border: none;
+            color: #F7E8AC;
+            font-size: 2rem;
+            cursor: pointer;
+            float: right;
+            line-height: 1;
+            transition: transform 0.3s;
+            padding: 0 0.2rem;
+        }
+        .sidebar-close:hover {
+            transform: rotate(90deg);
+        }
+
+        .sidebar h2 {
+            color: #F7E8AC;
+            font-size: 1.6rem;
+            margin: 1.5rem 0 1rem 0;
+            border-bottom: 2px solid #F7E8AC;
+            padding-bottom: 0.5rem;
+        }
+        .sidebar-menu {
+            list-style: none;
+            margin-top: 1rem;
+        }
+        .sidebar-menu li {
+            margin: 0.8rem 0;
+        }
+        .sidebar-menu a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.1rem;
+            display: block;
+            padding: 0.5rem 0.8rem;
+            border-radius: 6px;
+            transition: background 0.2s, color 0.2s;
+        }
+        .sidebar-menu a:hover {
+            background: #F7E8AC;
+            color: #00001e;
+        }
+
+        .page-header {
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .page-header h1 {
+            font-size: 2.5rem;
+            color: #FFC691;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .page-header p {
+            font-size: 1.2rem;
+            color: #ccc;
+            max-width: 700px;
+            margin: 0.5rem auto 0;
+        }
+
+        /* ===== БЛОКИ СОБЫТИЙ – теперь с текстурами ===== */
+        .event-block {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+
+        
+        }
+        .event-block.reverse {
+            flex-direction: row-reverse;
+        }
+
+        /* ===== УНИКАЛЬНЫЕ ТЕКСТУРЫ ДЛЯ КАЖДОГО БЛОКА ===== */
+        .texture-1 {
+            background-image: url('соб1.png'); /* СЮДА ВАШ ФАЙЛ */
+        }
+        .texture-2 {
+            background-image: url('соб2.png');
+        }
+        .texture-3 {
+            background-image: url('соб3.png');
+        }
+        .texture-4 {
+            background-image: url('соб4.png');
+        }
+
+        .event-img {
+            flex: 1 1 40%;
+        }
+        .event-img img {
+            width: 100%;
+            height: auto;
+          
+            display: block;
+
+        }
+
+        .event-text {
+            flex: 1 1 60%;
+            padding: 0 0.5rem;
+
+            padding: 1rem;
+        }
+        .event-text h2 {
+            color: #00001e;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        .event-text p {
+    color: #00001E;
+    font-size: 1rem;
+    margin-bottom: 0.4rem;
+        }
+        .event-text .info-line {
+            color: #00001e;
+            font-weight: 600;
+            margin-top: 0.3rem;
+        }
+
+        /* ===== КАРТОЧКИ "ПРОШЕДШИЕ СОБЫТИЯ" – тоже с текстурами ===== */
+        .cards-section {
+            margin: 3rem 0;
+        }
+        .cards-section h2 {
+            color: #ffb66c;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #ff5d52;
+            display: inline-block;
+            padding-bottom: 0.3rem;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 2rem;
+        }
+
+        .card-item {
+     
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+            text-align: center;
+    background-size: 150% 150%;   /* <-- увеличьте масштаб текстуры */
+    background-position: center;
+    background-repeat: no-repeat;
+   
+    min-height: 300px;            /* <-- если нужно увеличить блок */
+
+        }
+        .card-item:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Уникальные текстуры для карточек */
+        .card-texture-1 { background-image: url('сб1.png'); }
+        .card-texture-2 { background-image: url('сб2.png'); }
+        .card-texture-3 { background-image: url('сб3.png'); }
+        .card-texture-4 { background-image: url('сб4.png'); }
+
+        .card-item img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+ 
+        }
+        .card-item .card-body {
+            padding: 0.5rem 0.5rem 0.8rem;
+
+        }
+        .card-item h3 {
+            color: #00001e;
+            margin-bottom: 0.3rem;
+        }
+        .card-item p {
+            color: #006763;
+            font-size: 0.9rem;
+        }
+        .card-item .date-place {
+            color: #00001e;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-top: 0.3rem;
+        }
+
+        footer {
+            background-color: #00001e;
+            color: #CCC;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .header-flex {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 0.8rem;
+            }
+            .sidebar {
+                width: 280px;
+                left: -300px;
+            }
+            .page-header h1 {
+                font-size: 1.8rem;
+            }
+            .event-block {
+                flex-direction: column !important;
+                padding: 1rem;
+            }
+            .event-img,
+            .event-text {
+                flex: 1 1 100%;
+            }
+            .event-text {
+                padding: 0.5rem;
+            }
+            .cards-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar {
+                width: 260px;
+                left: -280px;
+            }
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <input type="checkbox" id="sidebar-toggle" />
+    <label for="sidebar-toggle" class="sidebar-overlay"></label>
+
+    <aside class="sidebar">
+        <label for="sidebar-toggle" class="sidebar-close" aria-label="Закрыть меню">✕</label>
+        <h2>Меню</h2>
+        <ul class="sidebar-menu">
+            <li><a href="Бар.html">Бар</a></li>
+            <li><a href="События2.html">События</a></li>
+            <li><a href="Вопрос-ответ.html">Вопрос-ответ</a></li>
+            <li><a href="Сотрудники2.html">Наши сотрудники</a></li>
+            <li><a href="Техбез.html">Правила посещения</a></li>
+            <li><a href="Отзывы.html">Отзывы</a></li>
+        </ul>
+    </aside>
+
+    <header>
+        <div class="container header-flex">
+            <div class="logo"><a href="index.html"><img src="logo.png" width="168" height="84" alt=""/></a></div>
+            <nav>
+                <ul>
+                    <li><label for="sidebar-toggle" class="nav-btn">Подробнее ></label></li>
+                    <li><a href="Клубы.html">Клубы</a></li>
+                    <li><a href="Цены.html">Цены</a></li>
+                    <li><a href="акции.html">Акции</a></li>
+                    <li><a href="Игры.html">Игры</a></li>
+                    <li><a href="Контакты2.html">Контакты</a></li>
+                </ul>
+            </nav>
+            <div>
+                <a href="Бронь.html" class="btn"><span class="btn-text">Забронировать</span></a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1>События и ивенты!</h1>
+                <p>Новые квесты появляются не только в играх. Следите за  событиями клуба, участвуйте в турнирах, встречайтесь с единомышленниками и  открывайте новые достижения вместе с нами!</p>
+</div>
+        </section>
+
+        <div class="container">
+
+            <!-- Блок 1: текстура-1 -->
+          <div class="event-block texture-1">
+                <div class="event-img">
+					<img src="кс.jpg" alt="1" width="99%" height="754"  style="border: 10px solid #e82136;" />
+                </div>
+                <div class="event-text">
+                    <h2>Любительский турнир по Counter-Strike 2                    </h2>
+                    <div class="info-line">
+                      <h3>12 июля – командное соревнование с призами для победителей.</h3>
+                    </div>
+            </div>
+            </div>
+
+            <!-- Блок 2: текстура-2 (reverse) -->
+          <div class="event-block reverse texture-2">
+                <div class="event-img">
+                    <img src="ночькоопа.jpg" alt="2" style="border: 10px solid #e55c1b;"  />
+                </div>
+                <div class="event-text">
+                    <h2>Ночь кооперативных игр                    </h2>
+                    <div class="info-line">
+                      <h3>19 июля – марафон совместных приключений и мини-конкурсов.</h3>
+                    </div>
+            </div>
+            </div>
+
+            <!-- Блок 3: текстура-3 -->
+          <div class="event-block texture-3">
+                <div class="event-img">
+                    <img src="спорт.jpg" alt="3" style="border: 10px solid #008f82;" />
+                </div>
+                <div class="event-text">
+                    <h2>Турнир по EA Sports FC                    </h2>
+                    <div class="info-line">
+                      <h3>26 июля – соревнование для поклонников  виртуального футбола.</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Блок 4: текстура-4 (reverse) -->
+          <div class="event-block reverse texture-4">
+                <div class="event-img">
+                    <img src="косплей.jpg" alt="4" style="border: 10px solid #722eaa;" />
+                </div>
+                <div class="event-text">
+                    <h2>Косплей-вечер игровых персонажей                    </h2>
+                    <div class="info-line">
+                      <h3>2 августа – тематическая встреча с конкурсом костюмов и  фотозоной.</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Прошедшие события -->
+            <section class="cards-section">
+                <div style="text-align: center;">
+                    <h2>Прошедшие события</h2>
+                </div>
+                <div class="cards-grid">
+                    <div class="card-item card-texture-1">
+                        <img src="валор.jpg" alt="5"  />
+                        <div class="card-body">
+                            <h3><strong>Весенний турнир по Valorant</strong></h3>
+                            <h4>32 команды приняли участие в соревновании за  главный приз клуба.</h4>
+                            <div class="date-place">22 июня                        </div>
+                        </div>
+                    </div>
+                    <div class="card-item card-texture-2">
+                        <img src="майн.jpg" alt="6" />
+                        <div class="card-body">
+                            <h3><strong>Ночной марафон Minecraft</strong></h3>
+                            <h4>Участники совместно построили масштабный игровой город за  одну ночь.</h4>
+<div class="date-place">31 мая                        </div>
+                        </div>
+                    </div>
+                    <div class="card-item card-texture-3">
+                        <img src="квиз.jpg" alt="7" />
+                        <div class="card-body">
+                            <h3><strong>Квиз по игровой индустрии</strong></h3>
+                            <h4>Гости проверили знания истории видеоигр и известных франшиз.</h4>
+<div class="date-place">3 мая                        </div>
+                      </div>
+                    </div>
+                    <div class="card-item card-texture-4">
+                        <img src="нг.jpg" alt="8" />
+                        <div class="card-body">
+                            <h3><strong>Новогодний LAN-фестиваль</strong></h3>
+                            <h4>Серия дружеских турниров и праздничных активностей для  посетителей клуба.</h4>
+<div class="date-place">2  января</div>
+                      </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2026 Компьютерный клуб. Все права защищены.</p>
+            <p>г. Воронеж</p>
+        </div>
+    </footer>
+
+</body>
+</html>

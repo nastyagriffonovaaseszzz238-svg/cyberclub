@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Вопрос-Ответ — Компьютерный клуб</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-image: url('fon3.png'); 
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-color: #00001e; 
+    color: #00001e;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ===== Шапка ===== */
+        header {
+            background-color: #00001e;
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        .logo span {
+            color: #F7E8AC;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        nav a:hover {
+            color: #F7E8AC;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 0.2rem 0.4rem;
+            transition: color 0.3s;
+            font-family: inherit;
+            display: inline-block;
+        }
+        .nav-btn:hover {
+            color: #F7E8AC;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-image: url('knopka_sdel_bron_bezh2.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            width: 250px;
+            height: 62px;
+            padding: 0;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1rem;
+            color: #00001E;
+            transition: transform 0.3s;
+            text-align: center;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-text {
+            display: inline-block;
+            transform: translateY(-4px);
+        }
+
+        #sidebar-toggle {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+            pointer-events: none;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            cursor: default;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 300px;
+            height: 100%;
+            background: #00001e;
+            border-right: 2px solid #F7E8AC;
+            z-index: 1000;
+            padding: 2rem 1.5rem;
+            transition: left 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.6);
+            overflow-y: auto;
+        }
+
+        #sidebar-toggle:checked ~ .sidebar-overlay {
+            opacity: 1;
+            visibility: visible;
+        }
+        #sidebar-toggle:checked ~ .sidebar {
+            left: 0;
+        }
+
+        .sidebar-close {
+            display: inline-block;
+            background: none;
+            border: none;
+            color: #F7E8AC;
+            font-size: 2rem;
+            cursor: pointer;
+            float: right;
+            line-height: 1;
+            transition: transform 0.3s;
+            padding: 0 0.2rem;
+        }
+        .sidebar-close:hover {
+            transform: rotate(90deg);
+        }
+
+        .sidebar h2 {
+            color: #F7E8AC;
+            font-size: 1.6rem;
+            margin: 1.5rem 0 1rem 0;
+            border-bottom: 2px solid #F7E8AC;
+            padding-bottom: 0.5rem;
+        }
+        .sidebar-menu {
+            list-style: none;
+            margin-top: 1rem;
+        }
+        .sidebar-menu li {
+            margin: 0.8rem 0;
+        }
+        .sidebar-menu a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.1rem;
+            display: block;
+            padding: 0.5rem 0.8rem;
+            border-radius: 6px;
+            transition: background 0.2s, color 0.2s;
+        }
+        .sidebar-menu a:hover {
+            background: #F7E8AC;
+            color: #00001e;
+        }
+
+        .page-header {
+  
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+           
+            margin-bottom: 2rem;
+        }
+        .page-header h1 {
+    font-size: 2.5rem;
+    color: #FFC691;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .page-header p {
+            font-size: 1.2rem;
+            color: #ccc;
+            max-width: 700px;
+            margin: 0.5rem auto 0;
+        }
+
+        /* ===== Стили для FAQ ===== */
+        .faq-section {
+            max-width: 700px;
+			            margin: 0 auto 3rem;
+		
+        }
+
+        .faq-item {
+          
+            margin-bottom: 1rem;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            transition: box-shadow 0.3s;
+            background: transparent;
+			 
+        }
+        .faq-item:hover {
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Вопрос  */
+        .faq-question {
+            display: block; 
+            padding: 2rem 1.5rem;
+            cursor: pointer;
+            user-select: none;
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: #f3d78f;
+            transition: background 0.2s;
+        }
+        .faq-question:hover {
+            background-color: rgba(243, 215, 143, 0.8);
+        }
+
+        /* Текстуры для вопросов */
+        .faq-question-1 { background-image: url('ramka_vopros_1.png'); }
+        .faq-question-2 { background-image: url('ramka_vopros_2.png'); }
+        .faq-question-3 { background-image: url('ramka_vopros_3.png'); }
+        .faq-question-4 { background-image: url('ramka_vopros_4.png'); }
+        .faq-question-5 { background-image: url('ramka_vopros_1.png'); }
+        .faq-question-6 { background-image: url('ramka_vopros_3.png'); }
+        .faq-question-7 { background-image: url('ramka_vopros_2.png'); }
+        .faq-question-8 { background-image: url('ramka_vopros_4.png'); }
+
+        .faq-question h3 {
+            font-size: 1.1rem;
+            color: #00001e;
+            margin: 0;
+			 transform: translateY(10px);
+        }
+
+        /* Ответы */
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.3s ease;
+            padding: 0 1.5rem;
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: #fef9e8;
+        }
+
+        /* Текстуры для ответов */
+        .faq-answer-1 { background-image: url('ramka_otvet_1.png'); }
+        .faq-answer-2 { background-image: url('ramka_otvet_2.png'); }
+        .faq-answer-3 { background-image: url('ramka_otvet_3.png'); }
+        .faq-answer-4 { background-image: url('ramka_otvet_4.png'); }
+        .faq-answer-5 { background-image: url('ramka_otvet_1.png'); }
+        .faq-answer-6 { background-image: url('ramka_otvet_3.png'); }
+        .faq-answer-7 { background-image: url('ramka_otvet_2.png'); }
+        .faq-answer-8 { background-image: url('ramka_otvet_4.png'); }
+
+        .faq-answer p {
+    color: #00001e;
+    font-size: 1rem;
+    margin: 0.5rem 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .faq-answer ul {
+            color: #00001e;
+            padding-left: 1.5rem;
+            margin: 0.5rem 0;
+        }
+        .faq-answer ul li {
+            margin-bottom: 0.3rem;
+        }
+        .faq-answer a {
+            color: #00001e;
+            font-weight: 600;
+            text-decoration: underline;
+        }
+        .faq-answer a:hover {
+            color: #00001e;
+        }
+
+        .faq-toggle {
+            display: none;
+        }
+
+        .faq-toggle:checked ~ .faq-answer {
+            max-height: 600px;
+            padding: 1.2rem 1.5rem;
+        }
+
+        footer {
+            background-color: #00001e;
+            color: #CCC;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 4rem;
+            
+        }
+
+        @media (max-width: 768px) {
+            .header-flex {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 0.8rem;
+            }
+            .sidebar {
+                width: 280px;
+                left: -300px;
+            }
+            .page-header h1 {
+                font-size: 1.8rem;
+            }
+            .faq-question h3 {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar {
+                width: 260px;
+                left: -280px;
+            }
+            .faq-question {
+                padding: 1rem;
+            }
+            .faq-answer {
+                padding: 0 1rem;
+            }
+            .faq-toggle:checked ~ .faq-answer {
+                padding: 1rem;
+            }
+        }
+		
+		
+    </style>
+</head>
+<body>
+
+	
+<input type="checkbox" id="sidebar-toggle" />
+    <label for="sidebar-toggle" class="sidebar-overlay"></label>
+
+    <aside class="sidebar">
+        <label for="sidebar-toggle" class="sidebar-close" aria-label="Закрыть меню">✕</label>
+        <h2>Меню</h2>
+        <ul class="sidebar-menu">
+            <li><a href="Бар.html">Бар</a></li>
+            <li><a href="События2.html">События</a></li>
+            <li><a href="Вопрос-ответ.html">Вопрос-ответ</a></li>
+            <li><a href="Сотрудники2.html">Наши сотрудники</a></li>
+            <li><a href="Техбез.html">Правила посещения</a></li>
+            <li><a href="Отзывы.html">Отзывы</a></li>
+        </ul>
+    </aside>
+
+<header>
+        <div class="container header-flex">
+            <div class="logo"><a href="index.html">	 <img src="logo.png" width="168" height="84" alt=""/></a></div>
+            <nav>
+                <ul>
+                    <li><label for="sidebar-toggle" class="nav-btn">Подробнее ></label></li>
+                    <li><a href="Клубы.html">Клубы</a></li>
+                    <li><a href="Цены.html">Цены</a></li>
+                    <li><a href="акции.html">Акции</a></li>
+                    <li><a href="Игры.html">Игры</a></li>
+                    <li><a href="Контакты2.html">Контакты</a></li>
+                </ul>
+            </nav>
+            <div>
+                <a href="Бронь.html" class="btn" ><span class="btn-text">Забронировать</span></a>
+            </div>
+        </div>
+    </header>
+
+<main>
+        <section class="page-header">
+            <div class="container">
+                <h1>Вопрос-Ответ</h1>
+                <p>Собрали самые часто задаваемые вопросы – кликните, чтобы увидеть ответ</p>
+            </div>
+        </section>
+
+        <div class="container">
+            <div class="faq-section">
+
+                <!-- Вопрос 1 -->
+                <div class="faq-item">
+                    <input type="checkbox" id="faq1" class="faq-toggle">
+                    <label for="faq1" class="faq-question faq-question-1">
+                        <h3>1. Нужно ли бронировать место заранее?</h3>
+                    </label>
+                    <div class="faq-answer faq-answer-1">
+                        <p><strong>Да, мы рекомендуем бронировать игровые места заранее, особенно в вечернее время и выходные дни.</strong></p>
+                    </div>
+                </div>
+
+                <!-- Вопрос 2 -->
+                <div class="faq-item">
+                    <input type="checkbox" id="faq2" class="faq-toggle">
+                    <label for="faq2" class="faq-question faq-question-2">
+                        <h3>2. Можно ли прийти со своей периферией?
+</h3>
+                    </label>
+                    <div class="faq-answer faq-answer-2">
+                        <p><strong>Да, вы можете использовать собственную клавиатуру, мышь, наушники и другие устройства.</strong></p>
+                    </div>
+                </div>
+
+                <!-- Вопрос 3 -->
+                <div class="faq-item">
+                    <input type="checkbox" id="faq3" class="faq-toggle">
+                    <label for="faq3" class="faq-question faq-question-3">
+                        <h3>3. Есть ли отдельные комнаты для командной игры?</h3>
+                    </label>
+                    <div class="faq-answer faq-answer-3">
+                        <p><strong>Да, в клубе доступны зоны для игры с друзьями и командных тренировок.</strong></p>
+                    </div>
+                </div>
+
+                <!-- Вопрос 4 -->
+                <div class="faq-item">
+                    <input type="checkbox" id="faq4" class="faq-toggle">
+                    <label for="faq4" class="faq-question faq-question-4">
+                        <h3>4. Какие игры установлены на компьютерах?</h3>
+                    </label>
+                    <div class="faq-answer faq-answer-4">
+                        <p><strong>На игровых станциях доступны популярные соревновательные и одиночные игры. Полный список можно уточнить у администратора или посмотреть на сайте в разделе «<a href="Игры.html">Игры</a>».</strong></p>
+                    </div>
+                </div>
+
+                <!-- Вопрос 5 -->
+                <div class="faq-item">
+                    <input type="checkbox" id="faq5" class="faq-toggle">
+                    <label for="faq5" class="faq-question faq-question-5">
+                        <h3>5. Можно ли приобрести еду и напитки на месте?</h3>
+                    </label>
+                    <div class="faq-answer faq-answer-5">
+                        <p><strong>Да, в баре клуба представлен ассортимент напитков, снеков и лёгких закусок.</strong></p>
+                    </div>
+                </div>
+
+                <!-- Вопрос 6 -->
+                <div class="faq-item">
+                    <input type="checkbox" id="faq6" class="faq-toggle">
+                    <label for="faq6" class="faq-question faq-question-6">
+                        <h3>6. Есть ли возрастные ограничения?</h3>
+                    </label>
+                    <div class="faq-answer faq-answer-6">
+                        <p><strong>Посещение клуба возможно для гостей любого возраста с соблюдением действующих правил и возрастных рейтингов игр</strong>.</p>
+                    </div>
+                </div>
+
+                <!-- Вопрос 7 -->
+                <div class="faq-item">
+                    <input type="checkbox" id="faq7" class="faq-toggle">
+                    <label for="faq7" class="faq-question faq-question-7">
+                        <h3>7. Можно ли проводить турниры или дни рождения?</h3>
+                    </label>
+                    <div class="faq-answer faq-answer-7">
+                        <p><strong>Да, клуб предоставляет возможность организации турниров, тематических мероприятий и праздников.</strong></p>
+                    </div>
+                </div>
+
+                <!-- Вопрос 8 -->
+                <div class="faq-item">
+                    <input type="checkbox" id="faq8" class="faq-toggle">
+                    <label for="faq8" class="faq-question faq-question-8">
+                        <h3>8. Что делать, если я опаздываю на бронь?</h3>
+                    </label>
+                    <div class="faq-answer faq-answer-8">
+                        <p><strong>Свяжитесь с администрацией клуба любым удобным способом. Мы постараемся сохранить ваше бронирование.</strong></p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+<footer>
+        <div class="container">
+            <p>© 2026 Компьютерный клуб. Все права защищены.</p>
+            <p>г. Воронеж</p>
+        </div>
+    </footer>
+
+</body>
+</html>
